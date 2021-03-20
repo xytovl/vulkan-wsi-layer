@@ -139,4 +139,15 @@ extern "C"
       auto &instance = layer::instance_private_data::get(physicalDevice);
       return instance.disp.ReleaseDisplayEXT(physicalDevice, display);
    }
+
+   VKAPI_ATTR void VKAPI_CALL wsi_layer_vkDestroySurfaceKHR(VkInstance vkinstance, VkSurfaceKHR surface,
+                                                            const VkAllocationCallbacks *pAllocator)
+   {
+      auto &instance = layer::instance_private_data::get(vkinstance);
+      if (instance.should_layer_handle_surface(surface))
+      {
+         return;
+      }
+      return instance.disp.DestroySurfaceKHR(vkinstance, surface, pAllocator);
+   }
 }

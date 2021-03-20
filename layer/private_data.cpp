@@ -127,7 +127,7 @@ bool instance_private_data::do_icds_support_surface(VkPhysicalDevice, VkSurfaceK
    return false;
 }
 
-bool instance_private_data::should_layer_handle_surface(VkPhysicalDevice phys_dev, VkSurfaceKHR surface)
+bool instance_private_data::should_layer_handle_surface(VkSurfaceKHR surface)
 {
    return surfaces.find(surface) != surfaces.end();
 }
@@ -198,7 +198,7 @@ bool device_private_data::layer_owns_all_swapchains(const VkSwapchainKHR *swapch
 
 bool device_private_data::should_layer_create_swapchain(VkSurfaceKHR vk_surface)
 {
-   return instance_data.should_layer_handle_surface(physical_device, vk_surface);
+   return instance_data.should_layer_handle_surface(vk_surface);
 }
 
 bool device_private_data::can_icds_create_swapchain(VkSurfaceKHR vk_surface)

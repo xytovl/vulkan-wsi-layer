@@ -37,7 +37,7 @@ VKAPI_ATTR VkResult wsi_layer_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysic
                                                                         VkSurfaceCapabilitiesKHR *pSurfaceCapabilities)
 {
    auto &instance = layer::instance_private_data::get(physicalDevice);
-   if (instance.should_layer_handle_surface(physicalDevice, surface))
+   if (instance.should_layer_handle_surface(surface))
    {
       wsi::surface_properties *props = wsi::get_surface_properties(surface);
       assert(props != nullptr);
@@ -59,7 +59,7 @@ VKAPI_ATTR VkResult wsi_layer_vkGetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDev
                                                                    VkSurfaceFormatKHR *pSurfaceFormats)
 {
    auto &instance = layer::instance_private_data::get(physicalDevice);
-   if (instance.should_layer_handle_surface(physicalDevice, surface))
+   if (instance.should_layer_handle_surface(surface))
    {
       wsi::surface_properties *props = wsi::get_surface_properties(surface);
       assert(props != nullptr);
@@ -79,7 +79,7 @@ VKAPI_ATTR VkResult wsi_layer_vkGetPhysicalDeviceSurfacePresentModesKHR(VkPhysic
                                                                         VkPresentModeKHR *pPresentModes)
 {
    auto &instance = layer::instance_private_data::get(physicalDevice);
-   if (instance.should_layer_handle_surface(physicalDevice, surface))
+   if (instance.should_layer_handle_surface(surface))
    {
       wsi::surface_properties *props = wsi::get_surface_properties(surface);
       assert(props != nullptr);
@@ -98,7 +98,7 @@ VKAPI_ATTR VkResult wsi_layer_vkGetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDev
                                                                    VkBool32 *pSupported)
 {
    auto &instance = layer::instance_private_data::get(physicalDevice);
-   if (instance.should_layer_handle_surface(physicalDevice, surface))
+   if (instance.should_layer_handle_surface(surface))
    {
       *pSupported = VK_TRUE;
       return VK_SUCCESS;

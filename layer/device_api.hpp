@@ -28,4 +28,7 @@ extern "C"
                                             const VkAllocationCallbacks *pAllocator, VkSurfaceKHR *pSurface);
 
    VKAPI_ATTR VkResult VKAPI_CALL wsi_layer_vkReleaseDisplayEXT(VkPhysicalDevice physicalDevice, VkDisplayKHR display);
+
+   VKAPI_ATTR void VKAPI_CALL wsi_layer_vkDestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface,
+                                                            const VkAllocationCallbacks *pAllocator);
 }

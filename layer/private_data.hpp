@@ -62,6 +62,7 @@ namespace layer
    OPTIONAL(GetDisplayPlaneSupportedDisplaysKHR)      \
    OPTIONAL(CreateDisplayPlaneSurfaceKHR)             \
    OPTIONAL(ReleaseDisplayEXT)                        \
+   OPTIONAL(DestroySurfaceKHR)                        \
 
 struct instance_dispatch_table
 {
@@ -162,7 +163,7 @@ public:
     *
     * @retval @c false if the layer should call down to the layers and ICDs below to handle the surface commands.
     */
-   bool should_layer_handle_surface(VkPhysicalDevice phys_dev, VkSurfaceKHR surface);
+   bool should_layer_handle_surface(VkSurfaceKHR surface);
 
    /**
     * @brief Check whether the given surface is supported for presentation via the layer.
