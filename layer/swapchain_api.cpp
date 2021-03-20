@@ -157,6 +157,26 @@ VKAPI_ATTR VkResult wsi_layer_vkQueuePresentKHR(VkQueue queue, const VkPresentIn
    }
 
    return ret;
+
+}
+
+VKAPI_ATTR VkResult wsi_layer_vkGetSwapchainCounterEXT(
+    VkDevice                                    device,
+    VkSwapchainKHR                              swapchain,
+    VkSurfaceCounterFlagBitsEXT                 counter,
+    uint64_t*                                   pCounterValue)
+{
+  layer::device_private_data &device_data = layer::device_private_data::get(device);
+  if (!device_data.layer_owns_swapchain(swapchain))
+  {
+    return device_data.disp.GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
+  }
+  wsi::swapchain_base *sc = reinterpret_cast<wsi::swapchain_base *>(swapchain);
+  assert(sc != nullptr);
+  if (VK_SURFACE_COUNTER_VBLANK_BIT_EXT == counter) {
+  	*pCounterValue = sc->vblank_count();
+  }
+  return VK_SUCCESS;
 }
 
 } /* extern "C" */

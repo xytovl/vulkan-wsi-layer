@@ -86,7 +86,7 @@ swapchain_base *allocate_surface_swapchain(VkSurfaceKHR surface, layer::device_p
 
    switch (surface_base->platform)
    {
-   case VK_ICD_WSI_PLATFORM_HEADLESS:
+   case VK_ICD_WSI_PLATFORM_DISPLAY:
       return allocate_swapchain<wsi::headless::swapchain>(dev_data, pAllocator);
    default:
       return nullptr;

@@ -39,6 +39,8 @@
 #include <util/timed_semaphore.hpp>
 #include <util/custom_allocator.hpp>
 
+extern VkFence global_vsync_fence;
+
 namespace wsi
 {
 struct swapchain_image
@@ -132,6 +134,8 @@ public:
     * otherwise returns VK_SUCCESS.
     */
    VkResult queue_present(VkQueue queue, const VkPresentInfoKHR *present_info, const uint32_t image_index);
+
+   uint64_t vblank_count() const { return m_vblank_count;}
 
 protected:
 
@@ -387,6 +391,10 @@ private:
     * semaphore of the swapchain will be posted.
     **/
    void page_flip_thread();
+
+   uint64_t m_vblank_count = 0;
+
+	 std::vector<VkFence> m_fences;
 };
 
 } /* namespace wsi */

@@ -126,8 +126,8 @@ extern "C"
    {
       auto &instance = layer::instance_private_data::get(vkinstance);
       auto surface = new VkIcdSurfaceBase();
-      *pSurface = (VkSurfaceKHR)surface;
       surface->platform = VK_ICD_WSI_PLATFORM_DISPLAY;
+      *pSurface = (VkSurfaceKHR)surface;
       instance.add_surface(*pSurface);
       return VK_SUCCESS;
    }
@@ -149,5 +149,30 @@ extern "C"
          return;
       }
       return instance.disp.DestroySurfaceKHR(vkinstance, surface, pAllocator);
+   }
+
+   VKAPI_ATTR VkResult VKAPI_CALL wsi_layer_vkRegisterDisplayEventEXT(
+    VkDevice                                    device,
+    VkDisplayKHR                                display,
+    const VkDisplayEventInfoEXT*                pDisplayEventInfo,
+    const VkAllocationCallbacks*                pAllocator,
+    VkFence*                                    pFence)
+   {
+      auto &instance = layer::device_private_data::get(device);
+      if (display != alvr_display_handle)
+      {
+      	return instance.disp.RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
+      }
+
+      //FIXME: connect the fence
+			VkFenceCreateInfo createInfo{
+				.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+					.flags = VK_FENCE_CREATE_SIGNALED_BIT
+			};
+      auto ret = instance.disp.CreateFence(device, &createInfo, pAllocator, pFence);
+      if (ret != VK_SUCCESS)
+      	return ret;
+
+      return ret;
    }
 }

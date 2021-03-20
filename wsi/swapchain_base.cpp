@@ -42,6 +42,8 @@
 
 #include "swapchain_base.hpp"
 
+VkFence global_vsync_fence = NULL;
+
 #if VULKAN_WSI_DEBUG > 0
 #define WSI_PRINT_ERROR(...) fprintf(stderr, ##__VA_ARGS__)
 #else
@@ -97,6 +99,8 @@ void swapchain_base::page_flip_thread()
          m_free_image_semaphore.post();
          continue;
       }
+
+			m_vblank_count += 1;
 
       /* First present of the swapchain. If it has an ancestor, wait until all the pending buffers
        * from the ancestor have finished page flipping before we set mode. */

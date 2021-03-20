@@ -63,6 +63,7 @@ namespace layer
    OPTIONAL(CreateDisplayPlaneSurfaceKHR)             \
    OPTIONAL(ReleaseDisplayEXT)                        \
    OPTIONAL(DestroySurfaceKHR)                        \
+   OPTIONAL(CreateHeadlessSurfaceEXT)                 \
 
 struct instance_dispatch_table
 {
@@ -109,6 +110,8 @@ struct instance_dispatch_table
    OPTIONAL(GetSwapchainImagesKHR)                  \
    OPTIONAL(AcquireNextImageKHR)                    \
    OPTIONAL(QueuePresentKHR)                        \
+   OPTIONAL(GetSwapchainCounterEXT)                 \
+   OPTIONAL(RegisterDisplayEventEXT)                \
 
 struct device_dispatch_table
 {
