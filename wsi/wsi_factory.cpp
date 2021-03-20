@@ -36,6 +36,7 @@
 #include <cstring>
 #include <new>
 #include <vulkan/vk_icd.h>
+#include <vulkan/vulkan_core.h>
 
 namespace wsi
 {
@@ -45,14 +46,14 @@ static struct wsi_extension
    VkExtensionProperties extension;
    VkIcdWsiPlatform platform;
 } const supported_wsi_extensions[] = {
-   { { VK_EXT_HEADLESS_SURFACE_EXTENSION_NAME, VK_EXT_HEADLESS_SURFACE_SPEC_VERSION }, VK_ICD_WSI_PLATFORM_HEADLESS }
+   { { VK_KHR_DISPLAY_EXTENSION_NAME, VK_KHR_DISPLAY_SPEC_VERSION}, VK_ICD_WSI_PLATFORM_DISPLAY}
 };
 
 static surface_properties *get_surface_properties(VkIcdWsiPlatform platform)
 {
    switch (platform)
    {
-   case VK_ICD_WSI_PLATFORM_HEADLESS:
+   case VK_ICD_WSI_PLATFORM_DISPLAY:
       return &headless::surface_properties::get_instance();
    default:
       return nullptr;

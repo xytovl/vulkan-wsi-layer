@@ -129,22 +129,19 @@ bool instance_private_data::do_icds_support_surface(VkPhysicalDevice, VkSurfaceK
 
 bool instance_private_data::should_layer_handle_surface(VkPhysicalDevice phys_dev, VkSurfaceKHR surface)
 {
-   /* If the layer cannot handle the surface, then necessarily the ICDs or layers below us must be able to do it:
-    * the fact that the surface exists means that the Vulkan loader created it. In turn, this means that someone
-    * among the ICDs and layers advertised support for it. If it's not us, then it must be one of the layers/ICDs
-    * below us. It is therefore safe to always return false (and therefore call-down) when layer_can_handle_surface
-    * is false.
-    */
-   bool icd_can_handle_surface = do_icds_support_surface(phys_dev, surface);
-   bool layer_can_handle_surface = does_layer_support_surface(surface);
-   bool ret = layer_can_handle_surface && !icd_can_handle_surface;
-   return ret;
+   return surfaces.find(surface) != surfaces.end();
 }
 
 void instance_private_data::destroy(VkInstance inst)
 {
    scoped_mutex lock(g_data_lock);
    g_instance_data.erase(get_key(inst));
+}
+
+void instance_private_data::add_surface(VkSurfaceKHR surface)
+{
+   scoped_mutex lock(g_data_lock);
+   surfaces.insert(surface);
 }
 
 device_private_data::device_private_data(instance_private_data &inst_data, VkPhysicalDevice phys_dev, VkDevice dev,

@@ -54,7 +54,14 @@ namespace layer
    OPTIONAL(GetPhysicalDeviceSurfaceCapabilitiesKHR)  \
    OPTIONAL(GetPhysicalDeviceSurfaceFormatsKHR)       \
    OPTIONAL(GetPhysicalDeviceSurfacePresentModesKHR)  \
-   OPTIONAL(GetPhysicalDeviceSurfaceSupportKHR)
+   OPTIONAL(GetPhysicalDeviceSurfaceSupportKHR)       \
+   OPTIONAL(GetPhysicalDeviceDisplayPropertiesKHR)    \
+   OPTIONAL(GetDisplayModePropertiesKHR)              \
+   OPTIONAL(GetPhysicalDeviceDisplayPlanePropertiesKHR) \
+   OPTIONAL(AcquireXlibDisplayEXT)                    \
+   OPTIONAL(GetDisplayPlaneSupportedDisplaysKHR)      \
+   OPTIONAL(CreateDisplayPlaneSurfaceKHR)             \
+   OPTIONAL(ReleaseDisplayEXT)                        \
 
 struct instance_dispatch_table
 {
@@ -100,7 +107,7 @@ struct instance_dispatch_table
    OPTIONAL(DestroySwapchainKHR)                    \
    OPTIONAL(GetSwapchainImagesKHR)                  \
    OPTIONAL(AcquireNextImageKHR)                    \
-   OPTIONAL(QueuePresentKHR)
+   OPTIONAL(QueuePresentKHR)                        \
 
 struct device_dispatch_table
 {
@@ -166,10 +173,18 @@ public:
     */
    bool does_layer_support_surface(VkSurfaceKHR surface);
 
+   void add_surface(VkSurfaceKHR);
+
    static void destroy(VkInstance inst);
 
    const instance_dispatch_table disp;
 
+   int first_plane_index;
+   static const int num_planes = 1;
+
+   struct Surface{
+     operator VkSurfaceKHR() const {return (VkSurfaceKHR)(this);}
+   };
 private:
    /**
     * @brief Check whether the given surface is already supported for presentation without the layer.
@@ -178,7 +193,10 @@ private:
 
    const PFN_vkSetInstanceLoaderData SetInstanceLoaderData;
    const util::wsi_platform_set enabled_layer_platforms;
+
+   std::unordered_set<VkSurfaceKHR> surfaces;
 };
+
 
 class device_private_data
 {

@@ -28,6 +28,7 @@
 
 #include <vulkan/vk_layer.h>
 
+#include "device_api.hpp"
 #include "private_data.hpp"
 #include "surface_api.hpp"
 #include "swapchain_api.hpp"
@@ -378,6 +379,14 @@ VK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL wsi_layer_vkGetInstance
    GET_PROC_ADDR(vkEnumerateDeviceExtensionProperties);
    GET_PROC_ADDR(vkEnumerateInstanceExtensionProperties);
    GET_PROC_ADDR(vkEnumerateInstanceLayerProperties);
+
+   GET_PROC_ADDR(vkGetPhysicalDeviceDisplayPropertiesKHR);
+   GET_PROC_ADDR(vkGetDisplayModePropertiesKHR);
+   GET_PROC_ADDR(vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
+   GET_PROC_ADDR(vkAcquireXlibDisplayEXT);
+   GET_PROC_ADDR(vkGetDisplayPlaneSupportedDisplaysKHR);
+   GET_PROC_ADDR(vkCreateDisplayPlaneSurfaceKHR);
+   GET_PROC_ADDR(vkReleaseDisplayEXT);
 
    return layer::instance_private_data::get(instance).disp.GetInstanceProcAddr(instance, funcName);
 }

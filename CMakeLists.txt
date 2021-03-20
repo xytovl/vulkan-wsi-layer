@@ -49,6 +49,7 @@ add_library(${PROJECT_NAME} SHARED
    layer/private_data.cpp
    layer/surface_api.cpp
    layer/swapchain_api.cpp
+   layer/device_api.cpp
    util/timed_semaphore.cpp
    util/custom_allocator.cpp
    util/extension_list.cpp
@@ -56,5 +57,6 @@ add_library(${PROJECT_NAME} SHARED
    wsi/wsi_factory.cpp
    wsi/headless/surface_properties.cpp
    wsi/headless/swapchain.cpp)
+ target_compile_definitions(${PROJECT_NAME} PRIVATE -DVK_USE_PLATFORM_XLIB_XRANDR_EXT)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 11)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${VULKAN_CXX_INCLUDE})
