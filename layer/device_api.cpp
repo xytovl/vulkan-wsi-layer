@@ -1,5 +1,8 @@
 #include "private_data.hpp"
 #include "device_api.hpp"
+#include "wsi/display.hpp"
+
+#include <vector>
 
 static const char *alvr_display_name = "ALVR display";
 
@@ -125,11 +128,14 @@ extern "C"
                                             const VkAllocationCallbacks *pAllocator, VkSurfaceKHR *pSurface)
    {
       auto &instance = layer::instance_private_data::get(vkinstance);
-      auto surface = new VkIcdSurfaceBase();
-      surface->platform = VK_ICD_WSI_PLATFORM_DISPLAY;
-      *pSurface = (VkSurfaceKHR)surface;
+      VkHeadlessSurfaceCreateInfoEXT createInfo{
+      	.sType = VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT
+      };
+      auto res = instance.disp.CreateHeadlessSurfaceEXT(vkinstance, &createInfo, pAllocator, pSurface);
+      if (*pSurface == NULL)
+      	std::abort();
       instance.add_surface(*pSurface);
-      return VK_SUCCESS;
+      return res;
    }
 
    VKAPI_ATTR VkResult VKAPI_CALL wsi_layer_vkReleaseDisplayEXT(VkPhysicalDevice physicalDevice, VkDisplayKHR display)
@@ -164,15 +170,59 @@ extern "C"
       	return instance.disp.RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
       }
 
-      //FIXME: connect the fence
-			VkFenceCreateInfo createInfo{
-				.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-					.flags = VK_FENCE_CREATE_SIGNALED_BIT
-			};
-      auto ret = instance.disp.CreateFence(device, &createInfo, pAllocator, pFence);
-      if (ret != VK_SUCCESS)
-      	return ret;
+      *pFence = wsi::display::get().get_vsync_fence();
 
-      return ret;
+      return VK_SUCCESS;
+   }
+
+   VKAPI_ATTR VkResult VKAPI_CALL wsi_layer_vkWaitForFences(
+    VkDevice                                    device,
+    uint32_t                                    fenceCount,
+    const VkFence*                              pFences,
+    VkBool32                                    waitAll,
+    uint64_t                                    timeout)
+   {
+      auto &instance = layer::device_private_data::get(device);
+      auto &alvr_fence = wsi::display::get().get_vsync_fence();
+      bool contains_alvr_fence = false;
+			std::vector<VkFence> other_fences;
+			for (uint32_t fence = 0 ; fence < fenceCount ; ++fence)
+			{
+				if (pFences[fence] == alvr_fence) {
+					contains_alvr_fence = true;
+				} else {
+					other_fences.push_back(pFences[fence]);
+				}
+			}
+
+			auto until = std::chrono::steady_clock::now() + std::chrono::nanoseconds (timeout);
+
+			if (waitAll)
+			{
+				if (not other_fences.empty())
+				{
+					auto ret = instance.disp.WaitForFences(device, other_fences.size(), other_fences.data(), waitAll, timeout);
+					if (ret != VK_SUCCESS)
+						return ret;
+				}
+				if (contains_alvr_fence)
+				{
+					bool signaled = alvr_fence.wait(until);
+					if (not signaled)
+						return VK_TIMEOUT;
+				}
+				return VK_SUCCESS;
+			} else {
+				// let's hope we don't go this path
+				while (std::chrono::steady_clock::now() < until)
+				{
+					auto ret = instance.disp.WaitForFences(device, other_fences.size(), other_fences.data(), waitAll, 0);
+					if (ret != VK_TIMEOUT)
+						return ret;
+					if (alvr_fence.get())
+						return VK_SUCCESS;
+				}
+				return VK_TIMEOUT;
+			}
    }
 }

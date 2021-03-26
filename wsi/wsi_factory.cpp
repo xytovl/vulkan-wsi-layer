@@ -46,14 +46,14 @@ static struct wsi_extension
    VkExtensionProperties extension;
    VkIcdWsiPlatform platform;
 } const supported_wsi_extensions[] = {
-   { { VK_KHR_DISPLAY_EXTENSION_NAME, VK_KHR_DISPLAY_SPEC_VERSION}, VK_ICD_WSI_PLATFORM_DISPLAY}
+   { { VK_KHR_DISPLAY_EXTENSION_NAME, VK_KHR_DISPLAY_SPEC_VERSION}, VK_ICD_WSI_PLATFORM_HEADLESS}
 };
 
 static surface_properties *get_surface_properties(VkIcdWsiPlatform platform)
 {
    switch (platform)
    {
-   case VK_ICD_WSI_PLATFORM_DISPLAY:
+   case VK_ICD_WSI_PLATFORM_HEADLESS:
       return &headless::surface_properties::get_instance();
    default:
       return nullptr;
@@ -86,7 +86,7 @@ swapchain_base *allocate_surface_swapchain(VkSurfaceKHR surface, layer::device_p
 
    switch (surface_base->platform)
    {
-   case VK_ICD_WSI_PLATFORM_DISPLAY:
+   case VK_ICD_WSI_PLATFORM_HEADLESS:
       return allocate_swapchain<wsi::headless::swapchain>(dev_data, pAllocator);
    default:
       return nullptr;

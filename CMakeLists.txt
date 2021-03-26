@@ -53,6 +53,8 @@ add_library(${PROJECT_NAME} SHARED
    util/timed_semaphore.cpp
    util/custom_allocator.cpp
    util/extension_list.cpp
+   util/fence.cpp
+   wsi/display.cpp
    wsi/swapchain_base.cpp
    wsi/wsi_factory.cpp
    wsi/headless/surface_properties.cpp

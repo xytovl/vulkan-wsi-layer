@@ -161,16 +161,13 @@ VKAPI_ATTR VkResult create_instance(const VkInstanceCreateInfo *pCreateInfo, con
       modified_app_info.apiVersion = minimum_required_vulkan_version;
    }
 
-   VkInstanceCreateInfo modified_info = *pCreateInfo;
-   modified_info.pApplicationInfo = &modified_app_info;
-
    /* Now call create instance on the chain further down the list.
     * Note that we do not remove the extensions that the layer supports from modified_info.ppEnabledExtensionNames.
     * Layers have to abide the rule that vkCreateInstance must not generate an error for unrecognized extension names.
     * Also, the loader filters the extension list to ensure that ICDs do not see extensions that they do not support.
     */
    VkResult result;
-   result = fpCreateInstance(&modified_info, pAllocator, pInstance);
+   result = fpCreateInstance(pCreateInfo, pAllocator, pInstance);
    if (result != VK_SUCCESS)
    {
       return result;

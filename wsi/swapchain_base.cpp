@@ -41,6 +41,7 @@
 #include <vulkan/vulkan.h>
 
 #include "swapchain_base.hpp"
+#include "display.hpp"
 
 VkFence global_vsync_fence = NULL;
 
@@ -123,6 +124,8 @@ void swapchain_base::page_flip_thread()
       {
          present_image(pending_index);
       }
+
+			display::get().get_vsync_fence().signal();
    }
 }
 
