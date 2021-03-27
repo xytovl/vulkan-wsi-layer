@@ -62,3 +62,6 @@ add_library(${PROJECT_NAME} SHARED
  target_compile_definitions(${PROJECT_NAME} PRIVATE -DVK_USE_PLATFORM_XLIB_XRANDR_EXT)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 11)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${VULKAN_CXX_INCLUDE})
+
+add_library("vulkan" SHARED vulkan-wrap.cpp)
+target_link_libraries("vulkan" PUBLIC "dl")
