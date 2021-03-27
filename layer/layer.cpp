@@ -357,6 +357,9 @@ VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL wsi_layer_vkGetDeviceProcAddr(VkDe
    GET_PROC_ADDR(vkAcquireNextImageKHR);
    GET_PROC_ADDR(vkQueuePresentKHR);
    GET_PROC_ADDR(vkGetSwapchainCounterEXT);
+   GET_PROC_ADDR(vkRegisterDisplayEventEXT);
+   GET_PROC_ADDR(vkGetFenceStatus);
+   GET_PROC_ADDR(vkDestroyFence);
 
    return layer::device_private_data::get(device).disp.GetDeviceProcAddr(device, funcName);
 }

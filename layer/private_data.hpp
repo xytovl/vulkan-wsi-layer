@@ -112,6 +112,7 @@ struct instance_dispatch_table
    OPTIONAL(QueuePresentKHR)                        \
    OPTIONAL(GetSwapchainCounterEXT)                 \
    OPTIONAL(RegisterDisplayEventEXT)                \
+   OPTIONAL(GetFenceStatus)                         \
 
 struct device_dispatch_table
 {

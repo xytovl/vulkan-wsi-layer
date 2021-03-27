@@ -46,4 +46,12 @@ extern "C"
     VkBool32                                    waitAll,
     uint64_t                                    timeout);
 
+   VKAPI_ATTR VkResult VKAPI_CALL wsi_layer_vkGetFenceStatus(
+    VkDevice                                    device,
+    VkFence                                     fence);
+
+   VKAPI_ATTR void VKAPI_CALL wsi_layer_vkDestroyFence(
+    VkDevice                                    device,
+    VkFence                                     fence,
+    const VkAllocationCallbacks*                pAllocator);
 }
